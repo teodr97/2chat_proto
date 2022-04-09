@@ -1,0 +1,5 @@
+rootProject.name = '2chat_proto'
+include 'client'
+include 'server'
+include 'commons'
+
