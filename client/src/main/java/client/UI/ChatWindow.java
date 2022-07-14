@@ -1,6 +1,12 @@
-package UI;
+package client.UI;
+
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
 
 import java.util.Scanner;
+
+import static client.Service.ServerInterface.connectToUser;
 
 public class ChatWindow {
 
@@ -9,10 +15,13 @@ public class ChatWindow {
 
         System.out.println("Connection ip: ");
         ip = new Scanner(System.in).next();
-        connectToUser(ip);
+        setupConnection(ip);
     }
 
-    private void connectToUser(String ip) {
-        ClientBuilder
+    private void setupConnection(String ip) {
+        int responseCode = connectToUser(ip);
+
+        if (responseCode != 200) System.out.println("Could not establish connection (timeout). Stopping application...");
+        else System.out.println("Connected to user!");
     }
 }

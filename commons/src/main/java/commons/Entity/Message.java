@@ -1,4 +1,4 @@
-package org.coblt.twochat.Entity;
+package commons.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +21,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long msgId;
+    private String username;
     private String text;
     // TODO Image/video capability
 }
