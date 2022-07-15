@@ -24,7 +24,8 @@ dependencies {
     required in order to communicate with the Spring server:
     the other client.
      */
-    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+    //implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-jersey'
 }
 
 test {

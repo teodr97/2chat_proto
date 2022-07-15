@@ -1,27 +1,71 @@
 package client.UI;
 
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.MediaType;
+import client.Service.ServerInterface;
+import commons.Entity.Message;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import java.net.ConnectException;
 import java.util.Scanner;
 
-import static client.Service.ServerInterface.connectToUser;
+import static client.Service.ServerInterface.connectionResponseCode;
 
 public class ChatWindow {
 
-    public void inputIp() {
-        String ip;
+    private static InputMessageThread inputMessageThread;
 
-        System.out.println("Connection ip: ");
-        ip = new Scanner(System.in).next();
-        setupConnection(ip);
+    private static String ip;
+
+    private static final String CMD_DISCONNECT = "/disconnect";
+
+    private static class InputMessageThread extends Thread {
+
+        @Override
+        public void run() {
+            while (true) {
+                String messageInput = new Scanner(System.in).next();
+
+                if (messageInput.equalsIgnoreCase(CMD_DISCONNECT)) {
+                    System.out.println("Stopping application...");
+                    ServerInterface.stopPollMessages();
+                    break;
+                }
+                else if (connectionResponseCode(ip) != 200) {
+                    System.out.println("[EXCEPTION] Connection to user dropped.\nStopping application...");
+                    break;
+                }
+                ClientBuilder.newClient(new ClientConfig())
+                        .target("http://" + ip + ":8080/chat")
+                        .request(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .post(Entity.entity(Message.builder().text(messageInput).build(), MediaType.APPLICATION_JSON));
+            }
+            interrupt();
+        }
     }
 
-    private void setupConnection(String ip) {
-        int responseCode = connectToUser(ip);
+    public static void inputIp() {
+        System.out.println("Connection ip: ");
+        ip = new Scanner(System.in).next();
+        System.out.println("Attempting to connect...");
+        setupConnection();
+    }
 
-        if (responseCode != 200) System.out.println("Could not establish connection (timeout). Stopping application...");
-        else System.out.println("Connected to user!");
+    private static void setupConnection() {
+        try {
+            if (connectionResponseCode(ip) != 200) throw new ConnectException();
+            else {
+                System.out.println("Connected to user!\nType \"/disconnect\" to disconnect from this session.");
+                inputMessageThread = new InputMessageThread();
+                inputMessageThread.start();
+                ServerInterface.pollMessages();
+            }
+        }
+        catch (ConnectException e) {
+            System.out.println("Could not establish connection (timeout). Stopping application...");
+        }
     }
 }
