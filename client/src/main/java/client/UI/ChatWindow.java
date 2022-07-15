@@ -28,7 +28,7 @@ public class ChatWindow {
             while (true) {
                 String messageInput = new Scanner(System.in).nextLine();
 
-                // TODO Messages sent to the other end should also be saved on local DB as own messages.
+                // TODO Messages sent to the other end should also be saved on local DB as own messages
                 if (messageInput.equalsIgnoreCase(CMD_DISCONNECT)) {
                     System.out.println("Stopping application...");
                     ServerInterface.stopPollMessages();
