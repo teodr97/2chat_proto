@@ -8,3 +8,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  rsocket:
+    server:
+      ssl:
+        key-store: classpath:testkey.jks
+        key-store-type: pkcs12
+        key-store-password: password
+        key-password: password
+        key-alias: testkey
+      port: 8443
