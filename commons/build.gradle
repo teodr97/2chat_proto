@@ -19,6 +19,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // AspectJ - used for Aspect-Oriented Programming principles (pointcuts, etc.)
+    implementation group:'org.aspectj', name:'aspectjweaver', version:'1.9.7'
+    implementation group: 'org.aspectj', name: 'aspectjrt', version: '1.9.9.1'
 }
 
 test {

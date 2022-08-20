@@ -1,4 +1,6 @@
 plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
@@ -15,7 +17,6 @@ dependencies {
     implementation project(":commons")
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -24,10 +25,17 @@ dependencies {
     required in order to communicate with the Spring server:
     the other client.
      */
-    //implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-jersey'
+    // AspectJ - used for Aspect-Oriented Programming principles (pointcuts, etc.)
+    implementation group:'org.aspectj', name:'aspectjweaver', version:'1.9.7'
+    implementation group: 'org.aspectj', name: 'aspectjrt', version: '1.9.9.1'
 }
 
 test {
     useJUnitPlatform()
+}
+
+javafx {
+    version = "18.0.2"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }

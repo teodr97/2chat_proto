@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Application.UI.Controller.Chat">
+   <children>
+      <ScrollPane id="panelScrollContacts" hbarPolicy="NEVER" layoutY="39.0" prefHeight="660.0" prefWidth="200.0" vbarPolicy="ALWAYS">
+        <content>
+          <AnchorPane fx:id="panelContacts" minHeight="0.0" minWidth="0.0" prefHeight="660.0" prefWidth="200.0" style="-fx-background-color: rgb(100, 100, 100);">
+               <children>
+                  <ListView fx:id="listContacts" blendMode="SRC_ATOP" pickOnBounds="false" prefHeight="654.0" prefWidth="200.0" style="-fx-background-color: rgb(100, 100, 100);" />
+               </children></AnchorPane>
+        </content>
+      </ScrollPane>
+      <ScrollPane id="panel_chat" hbarPolicy="NEVER" layoutX="200.0" layoutY="39.0" prefHeight="660.0" prefWidth="800.0" vbarPolicy="ALWAYS">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="660.0" prefWidth="800.0" style="-fx-background-color: rgb(200, 200, 200);" />
+        </content>
+      </ScrollPane>
+      <ToolBar prefHeight="40.0" prefWidth="1000.0">
+        <items>
+          <Button fx:id="bttnAddContact" mnemonicParsing="false" onAction="#addContact" text="Add Contact" />
+        </items>
+      </ToolBar>
+      <Pane fx:id="menuAddContact" layoutX="200.0" layoutY="40.0" prefHeight="660.0" prefWidth="800.0" visible="false">
+         <children>
+            <TextField fx:id="inputContactName" layoutX="106.0" layoutY="86.0" prefHeight="25.0" prefWidth="333.0" />
+            <Text fill="WHITE" layoutX="14.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Contact">
+               <font>
+                  <Font name="Noto Sans Regular" size="32.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="14.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+               <font>
+                  <Font name="Noto Sans Regular" size="20.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="14.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address">
+               <font>
+                  <Font name="Noto Sans Regular" size="20.0" />
+               </font>
+            </Text>
+            <TextField fx:id="inputContactAddress" layoutX="106.0" layoutY="125.0" prefHeight="25.0" prefWidth="333.0" />
+            <Button fx:id="bttnAddContactCreate" layoutX="16.0" layoutY="222.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="143.0" text="Add" />
+            <Button fx:id="bttnAddContactCancel" layoutX="296.0" layoutY="222.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="143.0" text="Cancel" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
