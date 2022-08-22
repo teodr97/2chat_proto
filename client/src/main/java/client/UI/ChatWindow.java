@@ -1,5 +1,6 @@
 package client.UI;
 
+import client.Service.HttpsClientFactory;
 import client.Service.ServerInterface;
 import commons.Entity.Message;
 import org.glassfish.jersey.client.ClientConfig;
@@ -9,6 +10,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.net.ConnectException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 import static client.Service.ServerInterface.connectionResponseCode;
@@ -34,15 +37,29 @@ public class ChatWindow {
                     ServerInterface.stopPollMessages();
                     break;
                 }
-                else if (connectionResponseCode(ip) != 200) {
-                    System.out.println("[EXCEPTION] Connection to user dropped.\nStopping application...");
-                    break;
+                else {
+                    try {
+                        if (connectionResponseCode(ip) != 200) {
+                            System.out.println("[EXCEPTION] Connection to user dropped.\nStopping application...");
+                            break;
+                        }
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (KeyManagementException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                ClientBuilder.newClient(new ClientConfig())
-                        .target("http://" + ip + ":8080/chat")
-                        .request(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .post(Entity.entity(Message.builder().text(messageInput).build(), MediaType.APPLICATION_JSON));
+                try {
+                    HttpsClientFactory.buildHttpsClient()
+                            .target("https://" + ip + ":8080/chat")
+                            .request(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .post(Entity.entity(Message.builder().text(messageInput).build(), MediaType.APPLICATION_JSON));
+                } catch (KeyManagementException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
             }
             interrupt();
         }
@@ -67,6 +84,10 @@ public class ChatWindow {
         }
         catch (ConnectException e) {
             System.out.println("Could not establish connection (timeout). Stopping application...");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
         }
     }
 }

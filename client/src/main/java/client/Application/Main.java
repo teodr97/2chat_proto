@@ -11,8 +11,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -22,6 +24,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static client.UI.ChatWindow.inputIp;
 
 @SpringBootApplication
 public class Main extends Application {
@@ -35,7 +39,7 @@ public class Main extends Application {
 
     @Override
     public void init() throws Exception {
-        context = SpringApplication.run(Main.class);
+        context = new SpringApplicationBuilder(Main.class).web(WebApplicationType.NONE).run();
 
         URL location = getClass().getResource("/fxml/Chat.fxml");
         FXMLLoader loader = new FXMLLoader();
@@ -49,6 +53,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setScene(new Scene(root, 1000, 700));
         primaryStage.show();
+        inputIp();
     }
 
     @Override

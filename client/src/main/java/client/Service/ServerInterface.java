@@ -8,6 +8,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,17 +27,30 @@ public class ServerInterface {
         @Override
         public void run(){
             while (true) {
-                if (connectionResponseCode("localhost") != 200) {
-                    System.out.println("[EXCEPTION] Could not connect to local database.\nStopping application...");
-                    break;
+                try {
+                    if (connectionResponseCode("localhost") != 200) {
+                        System.out.println("[EXCEPTION] Could not connect to local database.\nStopping application...");
+                        break;
+                    }
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (KeyManagementException e) {
+                    throw new RuntimeException(e);
                 }
                 // We poll incoming messages from our own DB, which will be hosted on localhost.
-                List<Message> pendingMessages = ClientBuilder.newClient()
-                        .target("http://localhost:8080/chat")
-                        .request(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .get()
-                        .readEntity(new GenericType<List<Message>>() {});
+                List<Message> pendingMessages = null;
+                try {
+                    pendingMessages = HttpsClientFactory.buildHttpsClient()
+                            .target("https://localhost:8080/chat")
+                            .request(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .get()
+                            .readEntity(new GenericType<List<Message>>() {});
+                } catch (KeyManagementException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
 
                 if (pendingMessages != null) for (Message message : pendingMessages) { System.out.println(">> " + message.getText()); }
                 try { sleep(1000); }
@@ -49,10 +64,10 @@ public class ServerInterface {
         }
     }
 
-    public static int connectionResponseCode(String ip) {
+    public static int connectionResponseCode(String ip) throws NoSuchAlgorithmException, KeyManagementException {
         // When accessing the URL, if the server is active it should always return status code 200
-        return ClientBuilder.newClient(new ClientConfig())
-                .target("http://" + ip + ":8080/")
+        return HttpsClientFactory.buildHttpsClient()
+                .target("https://" + ip + ":8080/")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .get()
