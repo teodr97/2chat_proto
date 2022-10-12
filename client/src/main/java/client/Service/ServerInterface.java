@@ -41,7 +41,7 @@ public class ServerInterface {
                 List<Message> pendingMessages = null;
                 try {
                     pendingMessages = HttpsClientFactory.buildHttpsClient()
-                            .target("https://localhost:8080/chat")
+                            .target("https://localhost:8443/chat")
                             .request(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
                             .get()
@@ -67,7 +67,7 @@ public class ServerInterface {
     public static int connectionResponseCode(String ip) throws NoSuchAlgorithmException, KeyManagementException {
         // When accessing the URL, if the server is active it should always return status code 200
         return HttpsClientFactory.buildHttpsClient()
-                .target("https://" + ip + ":8080/")
+                .target("https://" + ip + ":8443/")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .get()

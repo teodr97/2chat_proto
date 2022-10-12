@@ -51,7 +51,7 @@ public class ChatWindow {
                 }
                 try {
                     HttpsClientFactory.buildHttpsClient()
-                            .target("https://" + ip + ":8080/chat")
+                            .target("https://" + ip + ":8443/chat")
                             .request(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
                             .post(Entity.entity(Message.builder().text(messageInput).build(), MediaType.APPLICATION_JSON));
